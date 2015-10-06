@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VersionManager"
-  s.version      = "1.1.0"
+  s.version      = "1.1.1"
   s.summary      = "Store and check the app version status (obsolete, up to date, not up to date)"
 
   s.description  = <<-DESC
@@ -127,7 +127,8 @@ Pod::Spec.new do |s|
   #  where they will only apply to your library. If you depend on other Podspecs
   #  you can include multiple dependencies to ensure it works.
 
-  s.requires_arc = true
+    s.ios.requires_arc = true
+    s.watchos.requires_arc = true
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   # s.dependency "JSONKit", "~> 1.4"
