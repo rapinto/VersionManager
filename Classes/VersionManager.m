@@ -125,7 +125,7 @@ static VersionManager* sharedInstance = nil;
         {
             if ([VersionManager needToDisplayNewVersionAvailable])
             {
-                if (__delegate && [_delegate respondsToSelector:@selector(newAppVersionAvailable)])
+                if (_delegate && [_delegate respondsToSelector:@selector(newAppVersionAvailable)])
                 {
                     [_delegate newAppVersionAvailable];
                 }

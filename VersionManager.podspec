@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VersionManager"
-  s.version      = "1.1.2"
+  s.version      = "1.1.3"
   s.summary      = "Store and check the app version status (obsolete, up to date, not up to date)"
 
   s.description  = <<-DESC
