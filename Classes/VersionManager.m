@@ -43,10 +43,6 @@
 
 
 
-@synthesize delegate;
-
-
-
 #pragma mark -
 #pragma mark Singleton Methods
 
@@ -129,18 +125,18 @@ static VersionManager* sharedInstance = nil;
         {
             if ([VersionManager needToDisplayNewVersionAvailable])
             {
-                if (delegate && [delegate respondsToSelector:@selector(newAppVersionAvailable)])
+                if (__delegate && [_delegate respondsToSelector:@selector(newAppVersionAvailable)])
                 {
-                    [delegate newAppVersionAvailable];
+                    [_delegate newAppVersionAvailable];
                 }
             }
             break;
         }
         case kVersionManagerStatusObsolete:
         {
-            if (delegate && [delegate respondsToSelector:@selector(appVersionIsObsolete)])
+            if (_delegate && [_delegate respondsToSelector:@selector(appVersionIsObsolete)])
             {
-                [delegate appVersionIsObsolete];
+                [_delegate appVersionIsObsolete];
             }
             break;
         }

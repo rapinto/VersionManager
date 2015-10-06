@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VersionManager"
-  s.version      = "1.1.1"
+  s.version      = "1.1.2"
   s.summary      = "Store and check the app version status (obsolete, up to date, not up to date)"
 
   s.description  = <<-DESC
@@ -64,9 +64,8 @@ Pod::Spec.new do |s|
   #  the deployment target. You can optionally include the target after the platform.
   #
 
-# s.platform     = :ios
-    # s.ios.deployment_target = "7.0"
-    # s.watchos.deployment_target = "2.0"
+    s.watchos.deployment_target = '2.0'
+    s.ios.deployment_target = '7.0'
 
 
 
@@ -88,7 +87,6 @@ Pod::Spec.new do |s|
   #
 
   s.source_files  = "Classes", "Classes/*.{h,m}"
-  s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "Classes/**/*.h"
 
@@ -127,10 +125,6 @@ Pod::Spec.new do |s|
   #  where they will only apply to your library. If you depend on other Podspecs
   #  you can include multiple dependencies to ensure it works.
 
-    s.ios.requires_arc = true
-    s.watchos.requires_arc = true
-
-  # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
-  # s.dependency "JSONKit", "~> 1.4"
+    s.requires_arc = true
 
 end
