@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "VersionManager"
-  s.version      = "1.0.0"
+  s.version      = "1.1.0"
   s.summary      = "Store and check the app version status (obsolete, up to date, not up to date)"
 
   s.description  = <<-DESC
@@ -64,13 +64,10 @@ Pod::Spec.new do |s|
   #  the deployment target. You can optionally include the target after the platform.
   #
 
-  # s.platform     = :ios
-  s.platform     = :ios, "7.0"
+# s.platform     = :ios
+    # s.ios.deployment_target = "7.0"
+    # s.watchos.deployment_target = "2.0"
 
-  #  When using multiple platforms
-  # s.ios.deployment_target = "5.0"
-  # s.osx.deployment_target = "10.7"
-  # s.watchos.deployment_target = "2.0"
 
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -79,7 +76,7 @@ Pod::Spec.new do |s|
   #  Supports git, hg, bzr, svn and HTTP.
   #
 
-  s.source       = { :git => "https://github.com/rapinto/VersionManager.git", :tag => "1.0.0" }
+  s.source       = { :git => "https://github.com/rapinto/VersionManager.git", :tag => s.version }
 
 
   # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
@@ -117,7 +114,8 @@ Pod::Spec.new do |s|
   #
 
   # s.framework  = "SomeFramework"
-  s.frameworks = "Foundation"
+    s.ios.frameworks = "Foundation"
+    s.watchos.frameworks = "Foundation"
 
   # s.library   = "iconv"
   # s.libraries = "iconv", "xml2"
