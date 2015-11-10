@@ -55,14 +55,15 @@ enum VersionManagerStatus
 
 
 @property (weak, nonatomic) NSObject<VersionManagerDelegate>* delegate;
+@property (nonatomic, strong) NSString* appGroup;
 
 
 
 + (VersionManager*)sharedInstance;
 
-+ (enum VersionManagerStatus)currentVersionStatus; // Need to be called each time the app start.
-+ (void)setMinimumAllowedVersion:(float)_MinimumAllowedVersion lastAvailableVersion:(float)_LastAvailableVersion;
-+ (BOOL)needToDisplayNewVersionAvailable;
+- (enum VersionManagerStatus)currentVersionStatus; // Need to be called each time the app start.
+- (void)setMinimumAllowedVersion:(float)_MinimumAllowedVersion lastAvailableVersion:(float)_LastAvailableVersion;
+- (BOOL)needToDisplayNewVersionAvailable;
 
 
 

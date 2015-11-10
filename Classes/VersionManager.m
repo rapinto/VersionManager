@@ -69,18 +69,16 @@ static VersionManager* sharedInstance = nil;
 
 
 
-+ (enum VersionManagerStatus)currentVersionStatus
+- (enum VersionManagerStatus)currentVersionStatus
 {
-    NSString* lMinimumAllowedVersion = [[NSUserDefaults standardUserDefaults] valueForKey:kMinimumAllowedVersion];
+    NSString* lMinimumAllowedVersion = [self getMinimumAllowedVersion];
     NSString* lCurrentAppVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-    NSString* lLastAvailableVersion = [[NSUserDefaults standardUserDefaults] valueForKey:kLastAvailableVersion];
+    NSString* lLastAvailableVersion = [self getLastDisplayedAvailableVersion];
     
     
     if (lCurrentAppVersion && [lCurrentAppVersion isKindOfClass:[NSString class]] && [lCurrentAppVersion length] > 0)
     {
-        NSUserDefaults *shared = [[NSUserDefaults alloc] initWithSuiteName:@"group.Dealabs"];
-        [shared setValue:lCurrentAppVersion forKey:kLastInstalledVersion];
-        [shared synchronize];
+        [self saveLastDisplayedAvailableVersion:lCurrentAppVersion];
         
         // Version too old : display mandatory View
         if (lMinimumAllowedVersion && lCurrentAppVersion && [lMinimumAllowedVersion floatValue] > [lCurrentAppVersion floatValue])
@@ -106,12 +104,10 @@ static VersionManager* sharedInstance = nil;
 }
 
 
-+ (void)setMinimumAllowedVersion:(float)_MinimumAllowedVersion lastAvailableVersion:(float)_LastAvailableVersion
+- (void)setMinimumAllowedVersion:(float)_MinimumAllowedVersion lastAvailableVersion:(float)_LastAvailableVersion
 {
-    NSUserDefaults *shared = [[NSUserDefaults alloc] initWithSuiteName:@"group.Dealabs"];
-    [shared setObject:[NSNumber numberWithFloat:_MinimumAllowedVersion] forKey:kMinimumAllowedVersion];
-    [shared setObject:[NSNumber numberWithFloat:_LastAvailableVersion] forKey:kLastAvailableVersion];
-    [shared synchronize];
+    [self saveLastDisplayedAvailableVersion:[NSString stringWithFormat:@"%@", [NSNumber numberWithFloat:_LastAvailableVersion]]];
+    [self saveMinimumAllowedVersion:[NSString stringWithFormat:@"%@", [NSNumber numberWithFloat:_MinimumAllowedVersion]]];
     
     [[VersionManager sharedInstance] checkVersion];
 }
@@ -119,11 +115,11 @@ static VersionManager* sharedInstance = nil;
 
 - (void)checkVersion
 {
-    switch ([VersionManager currentVersionStatus])
+    switch ([self currentVersionStatus])
     {
         case kVersionManagerStatusNotUpToDate:
         {
-            if ([VersionManager needToDisplayNewVersionAvailable])
+            if ([self needToDisplayNewVersionAvailable])
             {
                 if (_delegate && [_delegate respondsToSelector:@selector(newAppVersionAvailable)])
                 {
@@ -149,18 +145,16 @@ static VersionManager* sharedInstance = nil;
 }
 
 
-+ (BOOL)needToDisplayNewVersionAvailable
+- (BOOL)needToDisplayNewVersionAvailable
 {
     NSString* lCurrentAppVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-    NSUserDefaults *shared = [[NSUserDefaults alloc] initWithSuiteName:@"group.Dealabs"];
     
-    NSString* lLastDisplayAvailableVersion = [shared valueForKey:kLastDisplayedAvailalbleVersion];
-    if ([VersionManager currentVersionStatus] == kVersionManagerStatusNotUpToDate &&
+    NSString* lLastDisplayAvailableVersion = [self getLastDisplayedAvailableVersion];
+    if ([self currentVersionStatus] == kVersionManagerStatusNotUpToDate &&
         (lLastDisplayAvailableVersion == nil ||
          (lLastDisplayAvailableVersion && lCurrentAppVersion && [lLastDisplayAvailableVersion floatValue] < [lCurrentAppVersion floatValue])))
     {
-        [shared setObject:[NSNumber numberWithFloat:[lCurrentAppVersion floatValue]] forKey:kLastDisplayedAvailalbleVersion];
-        [shared synchronize];
+        [self saveLastDisplayedAvailableVersion:[NSString stringWithFormat:@"%@", [NSNumber numberWithFloat:[lCurrentAppVersion floatValue]]]];
         
         return YES;
     }
@@ -169,5 +163,81 @@ static VersionManager* sharedInstance = nil;
 }
 
 
+
+#pragma mark -
+#pragma mark Private Methods
+
+
+
+- (void)saveLastDisplayedAvailableVersion:(NSString*)lastDisplayedAvailableVersion
+{
+    NSUserDefaults* lUserDefaults = nil;
+    
+    if (_appGroup)
+    {
+        lUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:_appGroup];
+    }
+    else
+    {
+        lUserDefaults = [NSUserDefaults standardUserDefaults];
+    }
+    
+    [lUserDefaults setObject:lastDisplayedAvailableVersion forKey:kLastAvailableVersion];
+    [lUserDefaults synchronize];
+}
+
+
+- (NSString*)getLastDisplayedAvailableVersion
+{
+    NSUserDefaults* lUserDefaults = nil;
+    
+    if (_appGroup)
+    {
+        lUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:_appGroup];
+    }
+    else
+    {
+        lUserDefaults = [NSUserDefaults standardUserDefaults];
+    }
+    
+    
+    return (NSString*)[lUserDefaults objectForKey:kLastAvailableVersion];
+}
+
+
+- (void)saveMinimumAllowedVersion:(NSString*)minimumAllowedVersion
+{
+    NSUserDefaults* lUserDefaults = nil;
+    
+    if (_appGroup)
+    {
+        lUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:_appGroup];
+    }
+    else
+    {
+        lUserDefaults = [NSUserDefaults standardUserDefaults];
+    }
+    
+    [lUserDefaults setObject:minimumAllowedVersion forKey:kMinimumAllowedVersion];
+    [lUserDefaults synchronize];
+}
+
+
+- (NSString*)getMinimumAllowedVersion
+{
+    NSUserDefaults* lUserDefaults = nil;
+    
+    if (_appGroup)
+    {
+        lUserDefaults = [[NSUserDefaults alloc] initWithSuiteName:_appGroup];
+    }
+    else
+    {
+        lUserDefaults = [NSUserDefaults standardUserDefaults];
+    }
+    
+    
+    return (NSString*)[lUserDefaults objectForKey:kMinimumAllowedVersion];
+}
 
 @end
